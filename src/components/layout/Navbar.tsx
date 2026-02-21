@@ -6,9 +6,9 @@ export default function Navbar() {
   return (
     <motion.nav
       className="fixed top-0 left-0 w-full h-16 flex items-center justify-between px-6 
-                 bg-zinc-900/80 text-white border-b border-zinc-800 
+                 bg-brand-lightCard/80 text-gray-900 border-b border-gray-200 
                  backdrop-blur-md z-50 
-                 dark:bg-zinc-50 dark:text-zinc-900 dark:border-zinc-200"
+                 dark:bg-brand-dark/80 dark:text-white dark:border-[#3A3C44]"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
@@ -21,7 +21,7 @@ export default function Navbar() {
         whileHover={{ scale: 1.05 }}
       >
         <Youtube className="text-red-500 mr-2" />
-        <span className="bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text">
+        <span className="text-gray-900 dark:text-white">
           YouTube Chrono
         </span>
       </motion.div>
@@ -33,7 +33,7 @@ export default function Navbar() {
           target="_blank"
           rel="noopener noreferrer"
           className="p-2 rounded-full transition-colors duration-200 glow-element
-                     hover:bg-zinc-800 dark:hover:bg-zinc-200 dark:text-zinc-800"
+                     hover:bg-gray-100 dark:hover:bg-[#3A3C44] text-gray-600 dark:text-gray-300"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >

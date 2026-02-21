@@ -23,13 +23,13 @@ export default function Toast({ message, type, isVisible, onClose }: ToastProps)
   const getToastColor = () => {
     switch (type) {
       case "success":
-        return "bg-green-500"
+        return "bg-brand-green text-white"
       case "error":
-        return "bg-red-500"
+        return "bg-red-500 text-white"
       case "info":
-        return "bg-purple-500"
+        return "bg-brand-purple text-white"
       default:
-        return "bg-purple-500"
+        return "bg-brand-purple text-white"
     }
   }
 
@@ -44,13 +44,13 @@ export default function Toast({ message, type, isVisible, onClose }: ToastProps)
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
         >
           <div
-            className={`flex items-center p-4 rounded-lg shadow-lg text-sm font-medium 
-          ${getToastColor()} text-zinc-800 dark:text-zinc-100`}
+            className={`flex items-center p-4 rounded-2xl shadow-lg text-sm font-medium 
+          ${getToastColor()}`}
           >
             <div className="flex-1 mr-2">{message}</div>
             <button
               onClick={onClose}
-              className="p-1 rounded-full hover:bg-zinc-200/50 dark:hover:bg-white/20 transition-colors"
+              className="p-1 rounded-full hover:bg-white/20 transition-colors"
             >
               <X size={16} />
             </button>

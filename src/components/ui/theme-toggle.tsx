@@ -25,7 +25,7 @@ export default function ThemeToggle() {
     return (
         <motion.button
             onClick={toggleDarkMode}
-            className="p-2 rounded-full hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors duration-200 glow-element"
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-[#3A3C44] text-gray-600 dark:text-gray-300 transition-colors duration-200 glow-element"
             whileHover={{ scale: 1.1, rotate: 15 }}
             whileTap={{ scale: 0.9 }}
         >

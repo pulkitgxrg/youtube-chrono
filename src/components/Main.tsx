@@ -25,6 +25,7 @@ interface PlaylistInfo {
 
 export default function Home() {
   const [playlistLink, setPlaylistLink] = useState<string>("")
+  const [userApiKey, setUserApiKey] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
   const [playlistInfo, setPlaylistInfo] = useState<PlaylistInfo | null>(null)
   const [error, setError] = useState<string>("")
@@ -34,7 +35,8 @@ export default function Home() {
     visible: false,
   })
 
-  const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY
+  const ENV_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY
+  const API_KEY = ENV_API_KEY || userApiKey
 
   const formatDuration = (duration: string): number => {
     const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
@@ -58,6 +60,11 @@ export default function Home() {
     setLoading(true)
     setError("")
     try {
+      if (!API_KEY) {
+        setError("Please provide a valid YouTube API Key.")
+        setLoading(false)
+        return
+      }
       const playlistResponse = await fetch(
         `https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${API_KEY}`,
       )
@@ -150,6 +157,10 @@ export default function Home() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    if (!API_KEY) {
+      setError("Please provide a YouTube API Key first.")
+      return
+    }
     const playlistIdMatch = playlistLink.match(/[&?]list=([^&]+)/)
     if (playlistIdMatch) {
       fetchPlaylistDetails(playlistIdMatch[1])
@@ -159,7 +170,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-black text-zinc-200 dark:bg-white dark:text-zinc-900">
+    <div className="flex flex-col min-h-screen bg-brand-light text-gray-900 dark:bg-brand-dark dark:text-gray-100">
       <MouseFollower />
       <AnimatedBackground />
       <Navbar />
@@ -172,16 +183,15 @@ export default function Home() {
         >
           <motion.form
             onSubmit={handleSubmit}
-            className="w-full p-8 bg-zinc-900/80 dark:bg-zinc-100/80 
-                   backdrop-blur-sm rounded-xl 
-                   border border-zinc-800 dark:border-zinc-300 
-                   shadow-xl space-y-6"
+            className="w-full p-8 bg-brand-lightCard dark:bg-brand-darkCard 
+                   rounded-3xl 
+                   shadow-sm space-y-6"
             initial={{ scale: 0.95 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.3 }}
           >
             <motion.h1
-              className="text-2xl font-bold text-center bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text"
+              className="text-2xl font-bold text-center text-gray-900 dark:text-white"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.5 }}
@@ -189,8 +199,29 @@ export default function Home() {
               Find the Length of Any YouTube Playlist 🎵
             </motion.h1>
 
+            {!ENV_API_KEY && (
+              <div className="space-y-2">
+                <label className="block text-gray-500 dark:text-gray-400 font-medium text-sm ml-2">
+                  Enter YouTube API Key
+                </label>
+                <motion.input
+                  whileFocus={{ scale: 1.01 }}
+                  type="text"
+                  value={userApiKey}
+                  onChange={(e) => setUserApiKey(e.target.value)}
+                  placeholder="AIzaSy..."
+                  className="w-full p-4 text-gray-900 dark:text-gray-100 
+                         bg-gray-100 dark:bg-[#3A3C44] 
+                         rounded-2xl focus:outline-none 
+                         focus:ring-2 focus:ring-brand-purple 
+                         transition-all duration-200"
+                  required
+                />
+              </div>
+            )}
+
             <div className="space-y-2">
-              <label className="block text-zinc-400 dark:text-zinc-600 font-medium text-sm">
+              <label className="block text-gray-500 dark:text-gray-400 font-medium text-sm ml-2">
                 Enter YouTube Playlist Link
               </label>
               <motion.input
@@ -199,23 +230,21 @@ export default function Home() {
                 value={playlistLink}
                 onChange={(e) => setPlaylistLink(e.target.value)}
                 placeholder="https://www.youtube.com/playlist?list=..."
-                className="w-full p-4 text-zinc-200 dark:text-zinc-800 
-                       bg-zinc-800/50 dark:bg-zinc-200/70 
-                       border border-zinc-700 dark:border-zinc-300 
-                       rounded-lg focus:outline-none 
-                       focus:ring-2 focus:ring-purple-500 
-                       focus:border-transparent transition-all duration-200"
+                className="w-full p-4 text-gray-900 dark:text-gray-100 
+                       bg-gray-100 dark:bg-[#3A3C44] 
+                       rounded-2xl focus:outline-none 
+                       focus:ring-2 focus:ring-brand-purple 
+                       transition-all duration-200"
                 required
               />
             </div>
 
             <motion.button
               type="submit"
-              className="glow-element w-full py-3 text-white dark:text-white 
-                     bg-gradient-to-r from-purple-600 to-pink-600 
-                     hover:from-purple-500 hover:to-pink-500 
-                     rounded-lg font-semibold text-lg 
-                     focus:outline-none focus:ring-4 focus:ring-purple-500/50 
+              className="glow-element w-full py-4 text-white 
+                     bg-brand-purple hover:bg-opacity-90 
+                     rounded-2xl font-semibold text-lg 
+                     focus:outline-none focus:ring-4 focus:ring-brand-purple/50 
                      transition-all duration-300"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -271,28 +300,28 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className="space-y-3 p-4 bg-zinc-800/50 dark:bg-zinc-100/70 rounded-lg border border-zinc-700 dark:border-zinc-300">
-                    <h2 className="font-bold truncate text-xl bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text">
+                  <div className="space-y-3 p-5 bg-brand-orange text-white rounded-3xl shadow-sm">
+                    <h2 className="font-bold truncate text-xl text-white">
                       {playlistInfo.title}
                     </h2>
-                    <p className="truncate text-sm text-zinc-400 dark:text-zinc-600">ID: {playlistInfo.id}</p>
-                    <p className="truncate text-sm text-zinc-400 dark:text-zinc-600">Creator: {playlistInfo.creator}</p>
+                    <p className="truncate text-sm text-white/80">ID: {playlistInfo.id}</p>
+                    <p className="truncate text-sm text-white/80">Creator: {playlistInfo.creator}</p>
 
-                    <div className="pt-2 border-t border-zinc-700 dark:border-zinc-300">
+                    <div className="pt-3 border-t border-white/20">
                       <p className="text-sm">
-                        <span className="text-zinc-400 dark:text-zinc-600">Video count:</span> {playlistInfo.videoCount} (from{" "}
+                        <span className="text-white/80">Video count:</span> {playlistInfo.videoCount} (from{" "}
                         {playlistInfo.videoRange}) (0 unavailable)
                       </p>
                       <p className="text-sm">
-                        <span className="text-zinc-400 dark:text-zinc-600">Average video length:</span> {playlistInfo.averageDuration}
+                        <span className="text-white/80">Average video length:</span> {playlistInfo.averageDuration}
                       </p>
-                      <p className="text-sm font-medium">
-                        <span className="text-zinc-400 dark:text-zinc-600">Total length:</span>{" "}
-                        <span className="text-purple-400">{playlistInfo.totalDuration}</span>
+                      <p className="text-sm font-semibold text-white">
+                        <span className="text-white/80">Total length:</span>{" "}
+                        <span>{playlistInfo.totalDuration}</span>
                       </p>
                     </div>
 
-                    <div className="pt-2 border-t border-zinc-700 dark:border-zinc-300 grid grid-cols-2 gap-2">
+                    <div className="pt-3 border-t border-white/20 grid grid-cols-2 gap-2">
                       {Object.entries(playlistInfo.speeds).map(([speed, time], index) => (
                         <motion.p
                           key={speed}
@@ -301,7 +330,7 @@ export default function Home() {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: 0.1 * index, duration: 0.3 }}
                         >
-                          <span className="text-zinc-400 dark:text-zinc-600">At {speed}:</span> {time}
+                          <span className="text-white/80">At {speed}:</span> {time}
                         </motion.p>
                       ))}
                     </div>

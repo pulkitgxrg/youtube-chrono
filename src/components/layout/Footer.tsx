@@ -4,10 +4,10 @@ export default function Footer() {
   return (
     <motion.footer
       className="hidden md:flex fixed bottom-0 left-0 w-full h-16 
-             bg-zinc-900/80 dark:bg-zinc-100/80 
+             bg-brand-lightCard/80 dark:bg-brand-dark/80 
              backdrop-blur-md 
-             text-zinc-400 dark:text-zinc-600 
-             border-t border-zinc-800 dark:border-zinc-300 
+             text-gray-500 dark:text-gray-400 
+             border-t border-gray-200 dark:border-[#3A3C44] 
              items-center justify-center"
       initial={{ y: 100 }}
       animate={{ y: 0 }}
@@ -16,7 +16,7 @@ export default function Footer() {
       <p className="text-center text-sm font-medium">
         © {new Date().getFullYear()} YouTube Chrono. All Rights Reserved.
         <br className="hidden md:block" />
-        <span className="bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text dark:from-purple-500 dark:to-pink-600">
+        <span className="text-gray-900 dark:text-white">
           Made with ❤️ by Pulkit Garg
         </span>
       </p>
